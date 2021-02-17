@@ -8,7 +8,7 @@
     "module": "CommonJS",
     "noEmit": true,
     "paths": {
-      "react-native-module-template": ["../src"]
+      "react-native-vimeo-player": ["../src"]
     },
     "skipLibCheck": true,
     "strict": true,

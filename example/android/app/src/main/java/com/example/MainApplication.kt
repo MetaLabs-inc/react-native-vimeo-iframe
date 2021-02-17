@@ -2,7 +2,6 @@ package com.example
 
 import android.app.Application
 import android.content.Context
-import com.alexdemchenko.reactnativemoduletemplate.RNModuleTemplatePackage
 import com.facebook.react.*
 import com.facebook.soloader.SoLoader
 import java.lang.reflect.InvocationTargetException
@@ -16,7 +15,6 @@ class MainApplication : Application(), ReactApplication {
 
         override fun getPackages(): List<ReactPackage> {
             val packages = PackageList(this).packages
-            packages.add(RNModuleTemplatePackage())
             return packages
         }
 

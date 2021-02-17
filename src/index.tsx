@@ -1,26 +1,86 @@
-import * as React from 'react'
-import { Button, NativeModules, StyleSheet, Text, View } from 'react-native'
+import React, {useCallback, useEffect, useState} from 'react';
+import {TouchableWithoutFeedback} from 'react-native';
+import {WebView} from 'react-native-webview';
+import webplayer from './template';
+import {LayoutProps} from './types';
 
-export const addOne = (input: number) => input + 1
+export const Vimeo: React.FC<LayoutProps> = ({
+  videoId,
+  onReady,
+  onPlay,
+  onPlayProgress,
+  onPause,
+  onFinish,
+  scalesPageToFit,
+  loop,
+  controls,
+  autoPlay,
+  speed = false,
+  style,
+}) => {
+  const [isReady, setReady] = useState<boolean>();
 
-export const Counter = () => {
-  const [count, setCount] = React.useState(0)
+  const [autoPlayValue, setAutoPlay] = useState<boolean>(autoPlay);
+  const toggleAutoPlay = useCallback(() => setAutoPlay(!autoPlayValue), [
+    autoPlayValue,
+  ]);
+
+  const handlers: any = {};
+  const registerHandlers = () => {
+    registerBridgeEventHandler('ready', onReady ?? onReadyDefault);
+    registerBridgeEventHandler('play', onPlay);
+    registerBridgeEventHandler('playProgress', onPlayProgress);
+    registerBridgeEventHandler('pause', onPause);
+    registerBridgeEventHandler('finish', onFinish);
+  };
+
+  const registerBridgeEventHandler = (eventName: string, handler: any) => {
+    handlers[eventName] = handler;
+  };
+
+  useEffect(() => {
+    registerHandlers();
+  }, [videoId, scalesPageToFit]);
+
+  const onBridgeMessage = (event: any) => {
+    const message = event.nativeEvent.data;
+    let payload;
+    try {
+      payload = JSON.parse(message);
+      if (payload?.name === 'finish') {
+        toggleAutoPlay();
+      }
+    } catch (err) {
+      return;
+    }
+    let handler = handlers[payload.name];
+    if (handler) handler(payload.data);
+  };
+
+  const onReadyDefault = () => {
+    setReady(true);
+    if (onReady) setTimeout(onReady);
+  };
 
   return (
-    <View style={styles.container}>
-      <Text>You pressed {count} times</Text>
-      <Button onPress={() => setCount(addOne(count))} title='Press Me' />
-    </View>
-  )
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 200,
-  },
-})
-
-export default NativeModules.RNModuleTemplate
+    <TouchableWithoutFeedback onPress={toggleAutoPlay}>
+      <WebView
+        source={{
+          html: webplayer(videoId, loop, autoPlayValue, controls, speed),
+        }}
+        javaScriptEnabled={true}
+        bounces={false}
+        onMessage={onBridgeMessage}
+        scalesPageToFit={scalesPageToFit}
+        onError={(error) => console.error(error)}
+        style={[
+          {
+            marginTop: -8,
+            marginLeft: -10,
+          },
+          style,
+        ]}
+      />
+    </TouchableWithoutFeedback>
+  );
+};

@@ -1,35 +1,25 @@
 {
-  "name": "react-native-module-template",
-  "version": "2.1.0",
-  "description": "A starter for the React Native library written in TypeScript, with linked example project and optional native code in Swift and Kotlin.",
-  "homepage": "https://github.com/demchenkoalex/react-native-module-template#readme",
-  "main": "lib/index.js",
+  "name": "react-native-vimeo-player",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/MetaLabs-inc/react-native-vimeo-player#readme",
+  "main": "src/index.tsx",
   "types": "lib/index.d.ts",
-  "author": "Alex Demchenko <alexdemchenko@yahoo.com>",
+  "author": "Marco Fiorito <marcofiorito1@gmail.com>",
   "license": "MIT",
   "files": [
-    "android",
-    "ios",
-    "lib",
-    "react-native-module-template.podspec",
-    "!.DS_Store",
-    "!.gradle",
-    "!.idea",
-    "!build",
-    "!gradle",
-    "!*.iml",
-    "!gradlew",
-    "!gradlew.bat",
-    "!local.properties",
-    "!project.xcworkspace",
-    "!xcshareddata",
-    "!xcuserdata"
+    "lib"
   ],
   "scripts": {
     "compile": "rm -rf lib && tsc -p .",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "prepare": "yarn compile",
     "test": "jest"
+  },
+  "dependencies": {
+    "react": "^17.0.1",
+    "react-native": "^0.63.4",
+    "react-native-webview": "11.2.3"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
