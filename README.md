@@ -1,6 +1,6 @@
-# React Native Vimeo Player
+# React Native Vimeo Iframe
 
-React Native Vimeo Player is a library to render Vimeo videos in a React Native app.
+React Native Vimeo Iframe is a library to render Vimeo videos in a React Native app.
 This component allows you to embed a Vimeo video in your app and have full access to
 the Vimeo player JS API (more information https://developer.vimeo.com/player/js-api).
 
@@ -9,7 +9,7 @@ the Vimeo player JS API (more information https://developer.vimeo.com/player/js-
 1. Go through the instructions for installing the
    `React Native Webview` library: https://github.com/react-native-webview/react-native-webview.
 
-1. Run `npm install react-native-vimeo-player` or `yarn add react-native-vimeo-player` within your project.
+1. Run `npm install react-native-vimeo-iframe` or `yarn add react-native-vimeo-iframe` within your project.
 
 1. Compile and build to make sure everything is set up properly.
 
@@ -37,7 +37,7 @@ information to your application.
 
 ## Example
 
-If you want to see `MetaLabs-inc/react-native-vimeo-player` in action, just move into the [example](/example) folder and run `yarn && cd ios && pod install && cd .. && yarn ios` or `yarn && yarn android`. By seeing its source code, you will have a better understanding of the library usage.
+If you want to see `MetaLabs-inc/react-native-vimeo-iframe` in action, just move into the [example](/example) folder and run `yarn && cd ios && pod install && cd .. && yarn ios` or `yarn && yarn android`. By seeing its source code, you will have a better understanding of the library usage.
 
 ## Contributors
 

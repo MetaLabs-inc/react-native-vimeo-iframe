@@ -1,6 +1,6 @@
 import React from 'react'
 import { SafeAreaView, View } from 'react-native'
-import { Vimeo } from 'react-native-vimeo-player'
+import { Vimeo } from 'react-native-vimeo-iframe'
 
 const App = () => {
   return (

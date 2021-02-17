@@ -1,8 +1,8 @@
 {
-  "name": "react-native-vimeo-player",
+  "name": "react-native-vimeo-iframe",
   "version": "1.0.0",
   "description": "",
-  "homepage": "https://github.com/MetaLabs-inc/react-native-vimeo-player#readme",
+  "homepage": "https://github.com/MetaLabs-inc/react-native-vimeo-iframe#readme",
   "main": "src/index.tsx",
   "types": "lib/index.d.ts",
   "author": "Marco Fiorito <marcofiorito1@gmail.com>",
