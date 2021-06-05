@@ -41,6 +41,9 @@
   "peerDependencies": {
     "react-native": "*"
   },
+  "resolutions": {
+    "**/react": "^17.0.1"
+  },
   "jest": {
     "preset": "react-native",
     "moduleFileExtensions": [
