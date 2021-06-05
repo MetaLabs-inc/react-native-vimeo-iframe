@@ -16,11 +16,6 @@
     "prepare": "yarn compile",
     "test": "jest"
   },
-  "dependencies": {
-    "react": "^17.0.1",
-    "react-native": "^0.63.4",
-    "react-native-webview": "11.2.3"
-  },
   "devDependencies": {
     "@babel/core": "^7.12.10",
     "@babel/runtime": "^7.12.5",
@@ -39,10 +34,8 @@
     "typescript": "^4.1.3"
   },
   "peerDependencies": {
-    "react-native": "*"
-  },
-  "resolutions": {
-    "**/react": "^17.0.1"
+    "react-native": "^0.63.4",
+    "react-native-webview": "11.2.3"
   },
   "jest": {
     "preset": "react-native",
