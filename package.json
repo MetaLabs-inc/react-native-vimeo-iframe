@@ -1,6 +1,6 @@
 {
   "name": "react-native-vimeo-iframe",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "homepage": "https://github.com/MetaLabs-inc/react-native-vimeo-iframe#readme",
   "main": "src/index.tsx",

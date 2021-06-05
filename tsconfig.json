@@ -12,6 +12,6 @@
     "strict": true,
     "target": "ESNext"
   },
-  "exclude": ["**/__tests__/*"],
-  "include": ["src"]
+  "exclude": [],
+  "include": ["src/index.tsx", "src/template", "src/types.ts"]
 }

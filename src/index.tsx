@@ -1,8 +1,9 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {TouchableWithoutFeedback} from 'react-native';
-import {WebView} from 'react-native-webview';
-import webplayer from './template';
-import {LayoutProps} from './types';
+import React, { useCallback, useEffect, useState } from 'react'
+import { TouchableWithoutFeedback } from 'react-native'
+import { WebView } from 'react-native-webview'
+
+import webplayer from './template'
+import { LayoutProps } from './types'
 
 export const Vimeo: React.FC<LayoutProps> = ({
   videoId,
@@ -18,49 +19,49 @@ export const Vimeo: React.FC<LayoutProps> = ({
   speed = false,
   style,
 }) => {
-  const [isReady, setReady] = useState<boolean>();
+  const [isReady, setReady] = useState<boolean>()
 
-  const [autoPlayValue, setAutoPlay] = useState<boolean>(autoPlay);
+  const [autoPlayValue, setAutoPlay] = useState<boolean>(autoPlay)
   const toggleAutoPlay = useCallback(() => setAutoPlay(!autoPlayValue), [
     autoPlayValue,
-  ]);
+  ])
 
-  const handlers: any = {};
+  const handlers: any = {}
   const registerHandlers = () => {
-    registerBridgeEventHandler('ready', onReady ?? onReadyDefault);
-    registerBridgeEventHandler('play', onPlay);
-    registerBridgeEventHandler('playProgress', onPlayProgress);
-    registerBridgeEventHandler('pause', onPause);
-    registerBridgeEventHandler('finish', onFinish);
-  };
+    registerBridgeEventHandler('ready', onReady ?? onReadyDefault)
+    registerBridgeEventHandler('play', onPlay)
+    registerBridgeEventHandler('playProgress', onPlayProgress)
+    registerBridgeEventHandler('pause', onPause)
+    registerBridgeEventHandler('finish', onFinish)
+  }
 
   const registerBridgeEventHandler = (eventName: string, handler: any) => {
-    handlers[eventName] = handler;
-  };
+    handlers[eventName] = handler
+  }
 
   useEffect(() => {
-    registerHandlers();
-  }, [videoId, scalesPageToFit]);
+    registerHandlers()
+  }, [videoId, scalesPageToFit])
 
   const onBridgeMessage = (event: any) => {
-    const message = event.nativeEvent.data;
-    let payload;
+    const message = event.nativeEvent.data
+    let payload
     try {
-      payload = JSON.parse(message);
+      payload = JSON.parse(message)
       if (payload?.name === 'finish') {
-        toggleAutoPlay();
+        toggleAutoPlay()
       }
     } catch (err) {
-      return;
+      return
     }
-    let handler = handlers[payload.name];
-    if (handler) handler(payload.data);
-  };
+    let handler = handlers[payload.name]
+    if (handler) handler(payload.data)
+  }
 
   const onReadyDefault = () => {
-    setReady(true);
-    if (onReady) setTimeout(onReady);
-  };
+    setReady(true)
+    if (onReady) setTimeout(onReady)
+  }
 
   return (
     <TouchableWithoutFeedback onPress={toggleAutoPlay}>
@@ -82,5 +83,5 @@ export const Vimeo: React.FC<LayoutProps> = ({
         ]}
       />
     </TouchableWithoutFeedback>
-  );
-};
+  )
+}
