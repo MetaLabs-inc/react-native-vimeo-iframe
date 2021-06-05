@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React from 'react'
 import { TouchableWithoutFeedback } from 'react-native'
 import { WebView } from 'react-native-webview'
 
@@ -19,10 +19,10 @@ export const Vimeo: React.FC<LayoutProps> = ({
   speed = false,
   style,
 }) => {
-  const [isReady, setReady] = useState<boolean>()
+  const [isReady, setReady] = React.useState<boolean>()
 
-  const [autoPlayValue, setAutoPlay] = useState<boolean>(autoPlay)
-  const toggleAutoPlay = useCallback(() => setAutoPlay(!autoPlayValue), [
+  const [autoPlayValue, setAutoPlay] = React.useState<boolean>(autoPlay)
+  const toggleAutoPlay = React.useCallback(() => setAutoPlay(!autoPlayValue), [
     autoPlayValue,
   ])
 
@@ -39,7 +39,7 @@ export const Vimeo: React.FC<LayoutProps> = ({
     handlers[eventName] = handler
   }
 
-  useEffect(() => {
+  React.useEffect(() => {
     registerHandlers()
   }, [videoId, scalesPageToFit])
 
