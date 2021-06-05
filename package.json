@@ -40,7 +40,8 @@
   },
   "peerDependencies": {
     "react": "*",
-    "react-native": "*"
+    "react-native": "*",
+    "react-dom": "*"
   },
   "jest": {
     "preset": "react-native",
