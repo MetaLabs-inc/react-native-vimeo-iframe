@@ -1,9 +1,8 @@
-import React from 'react'
-import { TouchableWithoutFeedback } from 'react-native'
-import { WebView } from 'react-native-webview'
+import React, { useCallback, useState, useEffect } from 'react';
+import { WebView } from 'react-native-webview';
 
-import webplayer from './template'
-import { LayoutProps } from './types'
+import webplayer from '../lib/template';
+import { LayoutProps } from '../lib/types';
 
 export const Vimeo: React.FC<LayoutProps> = ({
   videoId,
@@ -12,6 +11,8 @@ export const Vimeo: React.FC<LayoutProps> = ({
   onPlayProgress,
   onPause,
   onFinish,
+  onVolumeChange,
+  onError,
   scalesPageToFit,
   loop,
   controls,
@@ -19,69 +20,71 @@ export const Vimeo: React.FC<LayoutProps> = ({
   speed = false,
   style,
 }) => {
-  const [isReady, setReady] = React.useState<boolean>()
+  const [autoPlayValue, setAutoPlay] = useState<boolean>(autoPlay);
+  const handlers: any = {};
 
-  const [autoPlayValue, setAutoPlay] = React.useState<boolean>(autoPlay)
-  const toggleAutoPlay = React.useCallback(() => setAutoPlay(!autoPlayValue), [
-    autoPlayValue,
-  ])
+  const toggleAutoPlay = useCallback(() => {
+    setAutoPlay(!autoPlayValue);
+  }, [autoPlayValue]);
 
-  const handlers: any = {}
-  const registerHandlers = () => {
-    registerBridgeEventHandler('ready', onReady ?? onReadyDefault)
-    registerBridgeEventHandler('play', onPlay)
-    registerBridgeEventHandler('playProgress', onPlayProgress)
-    registerBridgeEventHandler('pause', onPause)
-    registerBridgeEventHandler('finish', onFinish)
-  }
+  const onReadyDefault = useCallback(() => {
+    onReady && setTimeout(onReady);
+  }, []);
 
-  const registerBridgeEventHandler = (eventName: string, handler: any) => {
-    handlers[eventName] = handler
-  }
+  const registerHandlers = useCallback(() => {
+    registerBridgeEventHandler('ready', onReady || onReadyDefault);
+    registerBridgeEventHandler('play', onPlay);
+    registerBridgeEventHandler('playProgress', onPlayProgress);
+    registerBridgeEventHandler('pause', onPause);
+    registerBridgeEventHandler('finish', onFinish);
+    registerBridgeEventHandler('volumeChange', onVolumeChange);
+    registerBridgeEventHandler('error', onError);
+  }, [
+    onReady,
+    onReadyDefault,
+    onPlay,
+    onPlayProgress,
+    onPause,
+    onFinish,
+  ]);
 
-  React.useEffect(() => {
-    registerHandlers()
-  }, [videoId, scalesPageToFit])
+  const registerBridgeEventHandler = useCallback((eventName: string, handler: any) => {
+    handlers[eventName] = handler;
+  }, [handlers]);
 
-  const onBridgeMessage = (event: any) => {
-    const message = event.nativeEvent.data
-    let payload
+  const onBridgeMessage = useCallback((event: any) => {
+    const message = event.nativeEvent.data;
+    const payload = JSON.parse(message);
     try {
-      payload = JSON.parse(message)
-      if (payload?.name === 'finish') {
-        toggleAutoPlay()
-      }
+      if (payload?.name === 'finish') toggleAutoPlay();
     } catch (err) {
-      return
+      return;
     }
-    let handler = handlers[payload.name]
-    if (handler) handler(payload.data)
-  }
+    const handler = handlers[payload.name];
+    handler && handler(payload.data);
+  }, [toggleAutoPlay]);
 
-  const onReadyDefault = () => {
-    setReady(true)
-    if (onReady) setTimeout(onReady)
-  }
+  useEffect(() => {
+    registerHandlers();
+  }, [registerHandlers, videoId, scalesPageToFit]);
 
   return (
-    <TouchableWithoutFeedback onPress={toggleAutoPlay}>
-      <WebView
-        source={{
-          html: webplayer(videoId, loop, autoPlayValue, controls, speed),
-        }}
-        javaScriptEnabled={true}
-        bounces={false}
-        onMessage={onBridgeMessage}
-        scalesPageToFit={scalesPageToFit}
-        onError={(error) => console.error(error)}
-        style={[
-          {
-            marginTop: -8,
-            marginLeft: -10,
-          },
-          style,
-        ]}
-      />
-    </TouchableWithoutFeedback>
-  )
-}
+    <WebView
+      source={{
+        html: webplayer(videoId, loop, autoPlayValue, controls, speed),
+      }}
+      javaScriptEnabled={true}
+      bounces={false}
+      onMessage={onBridgeMessage}
+      scalesPageToFit={scalesPageToFit}
+      onError={(error) => console.error(error)}
+      style={[
+        {
+          marginTop: -8,
+          marginLeft: -10,
+        },
+        style,
+      ]}
+    />
+  );
+};
