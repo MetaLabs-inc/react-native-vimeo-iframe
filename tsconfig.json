@@ -1,17 +1,22 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "react-native-paper": ["./src/index"]
+    },
     "declaration": true,
     "esModuleInterop": true,
     "isolatedModules": true,
     "jsx": "react-native",
     "lib": ["ESNext"],
-    "module": "CommonJS",
+    "module": "ESNext",
+    "moduleResolution": "node",
     "noEmitOnError": true,
     "outDir": "./lib",
     "sourceMap": true,
     "strict": true,
     "target": "ESNext"
   },
-  "exclude": [],
+  "exclude": ["lib/**/*"],
   "include": ["src/index.tsx", "src/template", "src/types.ts"]
 }

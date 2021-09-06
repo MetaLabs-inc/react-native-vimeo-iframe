@@ -3,7 +3,7 @@ export default (
   loop: boolean,
   autoPlay: boolean,
   controls: boolean,
-  speed: boolean,
+  speed: boolean
 ) => `
 <html><head>
 <title></title>
@@ -74,4 +74,4 @@ const  sendEvent = (evt, data) => {
 webViewBridge();
 </script>
 </body></html>
-`;
+`
