@@ -1,9 +1,8 @@
-import React from 'react'
-import { TouchableWithoutFeedback } from 'react-native'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { WebView } from 'react-native-webview'
 
 import webplayer from './template'
-import { LayoutProps } from './types'
+import { LayoutProps, PlayerActions, PlayerEvents } from './types'
 
 export const Vimeo: React.FC<LayoutProps> = ({
   videoId,
@@ -18,70 +17,123 @@ export const Vimeo: React.FC<LayoutProps> = ({
   autoPlay,
   speed = false,
   style,
+  onVolumeChange,
+  onError,
+  containerStyle,
+  getVimeoPlayer,
 }) => {
-  const [isReady, setReady] = React.useState<boolean>()
+  const [isPlaying, setPlaying] = useState<boolean>(false)
+  const ref = useRef<WebView>()
 
-  const [autoPlayValue, setAutoPlay] = React.useState<boolean>(autoPlay)
-  const toggleAutoPlay = React.useCallback(() => setAutoPlay(!autoPlayValue), [
+  const [autoPlayValue, setAutoPlay] = useState<boolean>(autoPlay)
+  const toggleAutoPlay = useCallback(() => setAutoPlay(!autoPlayValue), [
     autoPlayValue,
   ])
 
   const handlers: any = {}
-  const registerHandlers = () => {
-    registerBridgeEventHandler('ready', onReady ?? onReadyDefault)
+
+  const player = useCallback(
+    (action: PlayerActions) => {
+      const handler = ref?.current?.injectJavaScript
+
+      if (handler) {
+        switch (action.type) {
+          case PlayerEvents.PLAY:
+            if (isPlaying) return
+            handler('play();')
+            setPlaying(true)
+            break
+          case PlayerEvents.PAUSE:
+            if (!isPlaying) return
+            handler('await pause();')
+            setPlaying(false)
+            break
+          case PlayerEvents.SET_TIME:
+            handler(`setTime(${action.time});`)
+            break
+          case PlayerEvents.GET_DURATION:
+            handler(`
+            const videoDuration = getDuration();
+            const callback = ${action.callback};
+            callback(videoDuration);
+          `)
+            break
+          default:
+            break
+        }
+      }
+    },
+    [ref, isPlaying]
+  )
+
+  const onReadyDefault = useCallback(() => {
+    onReady && setTimeout(onReady)
+  }, [onReady])
+
+  const registerHandlers = useCallback(() => {
+    registerBridgeEventHandler('ready', onReadyDefault)
     registerBridgeEventHandler('play', onPlay)
     registerBridgeEventHandler('playProgress', onPlayProgress)
     registerBridgeEventHandler('pause', onPause)
     registerBridgeEventHandler('finish', onFinish)
-  }
+    registerBridgeEventHandler('volumeChange', onVolumeChange)
+    registerBridgeEventHandler('error', onError)
+  }, [onReadyDefault, onPlay, onPlayProgress, onPause, onFinish])
 
   const registerBridgeEventHandler = (eventName: string, handler: any) => {
     handlers[eventName] = handler
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     registerHandlers()
-  }, [videoId, scalesPageToFit])
+  }, [registerHandlers, videoId, scalesPageToFit])
 
-  const onBridgeMessage = (event: any) => {
-    const message = event.nativeEvent.data
-    let payload
-    try {
-      payload = JSON.parse(message)
-      if (payload?.name === 'finish') {
-        toggleAutoPlay()
+  const onBridgeMessage = useCallback(
+    (event: any) => {
+      const message = event.nativeEvent.data
+      let payload
+      try {
+        payload = JSON.parse(message)
+        if (payload?.name === 'finish') {
+          toggleAutoPlay()
+        }
+      } catch (err) {
+        return
       }
-    } catch (err) {
-      return
-    }
-    let handler = handlers[payload.name]
-    if (handler) handler(payload.data)
-  }
+      let handler = handlers[payload.name]
+      if (handler) handler(payload.data)
+    },
+    [toggleAutoPlay]
+  )
 
-  const onReadyDefault = () => {
-    setReady(true)
-    if (onReady) setTimeout(onReady)
-  }
+  useEffect(() => {
+    getVimeoPlayer && getVimeoPlayer(player)
+  }, [getVimeoPlayer, player])
 
   return (
-    <TouchableWithoutFeedback onPress={toggleAutoPlay}>
-      <WebView
-        source={{
-          html: webplayer(videoId, loop, autoPlayValue, controls, speed),
-        }}
-        javaScriptEnabled={true}
-        bounces={false}
-        onMessage={onBridgeMessage}
-        scalesPageToFit={scalesPageToFit}
-        onError={(error) => console.error(error)}
-        style={[
-          {
-            marginTop: -8,
-            marginLeft: -10,
-          },
-          style,
-        ]}
-      />
-    </TouchableWithoutFeedback>
+    <WebView
+      source={{
+        html: webplayer(videoId, loop, autoPlayValue, controls, speed),
+      }}
+      javaScriptEnabled={true}
+      ref={ref as any}
+      onMessage={onBridgeMessage}
+      bounces={false}
+      scrollEnabled={false}
+      scalesPageToFit={scalesPageToFit}
+      onError={(error) => console.error(error)}
+      style={[
+        {
+          marginTop: -8,
+          marginLeft: -10,
+        },
+        style,
+      ]}
+      containerStyle={containerStyle}
+      setBuiltInZoomControls={false}
+      setDisplayZoomControls={false}
+      automaticallyAdjustContentInsets
+      onNavigationStateChange={(a) => console.log(a?.url)}
+    />
   )
 }
