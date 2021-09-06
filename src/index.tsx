@@ -1,8 +1,8 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect, useRef } from 'react';
 import { WebView } from 'react-native-webview';
 
 import webplayer from '../lib/template';
-import { LayoutProps } from '../lib/types';
+import { LayoutProps, PossiblePlayerActions } from '../lib/types';
 
 export const Vimeo: React.FC<LayoutProps> = ({
   videoId,
@@ -19,9 +19,42 @@ export const Vimeo: React.FC<LayoutProps> = ({
   autoPlay,
   speed = false,
   style,
+  containerStyle,
+  getVimeoPlayer,
 }) => {
+  const [isPlaying, setPlaying] = useState<boolean>(false);
   const [autoPlayValue, setAutoPlay] = useState<boolean>(autoPlay);
+  const ref = useRef<WebView>();
   const handlers: any = {};
+
+  const player = useCallback((action: PossiblePlayerActions) => {
+    const handler = ref.current.injectJavaScript;
+
+    switch(action.type) {
+      case 'play':
+        if (isPlaying) return;
+        handler('play();');
+        setPlaying(true);
+        break;
+      case 'pause':
+        if (!isPlaying) return;
+        handler('await pause();');
+        setPlaying(false);
+        break;
+      case 'set_time':
+        handler(`setTime(${action.time});`);
+        break;
+      case 'get_duration':
+        handler(`
+          const videoDuration = getDuration();
+          const callback = ${action.callback};
+          callback(videoDuration);
+        `);
+        break;
+      default:
+        break;
+    }
+  }, [ref, isPlaying]);
 
   const toggleAutoPlay = useCallback(() => {
     setAutoPlay(!autoPlayValue);
@@ -29,7 +62,7 @@ export const Vimeo: React.FC<LayoutProps> = ({
 
   const onReadyDefault = useCallback(() => {
     onReady && setTimeout(onReady);
-  }, []);
+  }, [onReady]);
 
   const registerHandlers = useCallback(() => {
     registerBridgeEventHandler('ready', onReady || onReadyDefault);
@@ -68,23 +101,28 @@ export const Vimeo: React.FC<LayoutProps> = ({
     registerHandlers();
   }, [registerHandlers, videoId, scalesPageToFit]);
 
+  useEffect(() => {
+    getVimeoPlayer && getVimeoPlayer(player);
+  }, [getVimeoPlayer, player]);
+
   return (
     <WebView
       source={{
         html: webplayer(videoId, loop, autoPlayValue, controls, speed),
       }}
       javaScriptEnabled={true}
-      bounces={false}
+      ref={ref}
       onMessage={onBridgeMessage}
-      scalesPageToFit={scalesPageToFit}
+      scalesPageToFit={false}
+      onNavigationStateChange={a => console.log(a.url)}
       onError={(error) => console.error(error)}
-      style={[
-        {
-          marginTop: -8,
-          marginLeft: -10,
-        },
-        style,
-      ]}
+      scrollEnabled={false}
+      style={style}
+      containerStyle={containerStyle}
+      setBuiltInZoomControls={false}
+      setDisplayZoomControls={false}
+      automaticallyAdjustContentInsets
+      allowsFullscreenVideo
     />
   );
 };
