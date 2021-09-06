@@ -78,7 +78,15 @@ export const Vimeo: React.FC<LayoutProps> = ({
     registerBridgeEventHandler('finish', onFinish)
     registerBridgeEventHandler('volumeChange', onVolumeChange)
     registerBridgeEventHandler('error', onError)
-  }, [onReadyDefault, onPlay, onPlayProgress, onPause, onFinish])
+  }, [
+    onReadyDefault,
+    onPlay,
+    onPlayProgress,
+    onError,
+    onVolumeChange,
+    onPause,
+    onFinish,
+  ])
 
   const registerBridgeEventHandler = (eventName: string, handler: any) => {
     handlers[eventName] = handler
@@ -100,8 +108,9 @@ export const Vimeo: React.FC<LayoutProps> = ({
       } catch (err) {
         return
       }
-      let handler = handlers[payload.name]
-      if (handler) handler(payload.data)
+
+      let bridgeMessageHandler = handlers[payload.name]
+      if (bridgeMessageHandler) bridgeMessageHandler(payload.data)
     },
     [toggleAutoPlay]
   )
