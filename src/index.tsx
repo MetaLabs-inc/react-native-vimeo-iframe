@@ -94,7 +94,7 @@ export const Vimeo: React.FC<LayoutProps> = ({
 
   useEffect(() => {
     registerHandlers()
-  }, [registerHandlers, videoId, scalesPageToFit])
+  }, [videoId, scalesPageToFit])
 
   const onBridgeMessage = useCallback(
     (event: any) => {
@@ -112,7 +112,7 @@ export const Vimeo: React.FC<LayoutProps> = ({
       let bridgeMessageHandler = handlers[payload?.name]
       if (bridgeMessageHandler) bridgeMessageHandler(payload?.data)
     },
-    [toggleAutoPlay]
+    [toggleAutoPlay, handlers]
   )
 
   useEffect(() => {
