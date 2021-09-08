@@ -45,11 +45,8 @@ export const Vimeo: React.FC<LayoutProps> = ({
         handler(`setTime(${action.time});`);
         break;
       case 'get_duration':
-        handler(`
-          const videoDuration = getDuration();
-          const callback = ${action.callback};
-          callback(videoDuration);
-        `);
+        registerBridgeEventHandler('duration', action.callback);
+        handler('getDuration();');
         break;
       default:
         break;
