@@ -38,7 +38,7 @@ export const Vimeo: React.FC<LayoutProps> = ({
         break;
       case 'pause':
         if (!isPlaying) return;
-        handler('await pause();');
+        handler('pause();');
         setPlaying(false);
         break;
       case 'set_time':
