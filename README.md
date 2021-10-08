@@ -17,7 +17,7 @@ the Vimeo player JS API (more information https://developer.vimeo.com/player/js-
 
 ```
         <Vimeo
-          videoId={'513199601'}
+          videoId={'76979871'}
           onReady={() => console.log('Video is ready')}
           onPlay={() => console.log('Video is playing')}
           onPlayProgress={(data) => console.log('Video progress data:', data)}

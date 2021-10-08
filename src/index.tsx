@@ -121,6 +121,7 @@ export const Vimeo: React.FC<LayoutProps> = ({
 
   return (
     <WebView
+      allowsFullscreenVideo={true}
       source={{
         html: webplayer(videoId, loop, autoPlayValue, controls, speed),
       }}
