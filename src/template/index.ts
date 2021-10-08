@@ -36,6 +36,8 @@ iframe.height = '98%';
 iframe.frameBorder = '0';
 iframe.webkitallowfullscreen = true;
 iframe.allowfullscreen = true;
+iframe.mozallowfullscreen = true;
+iframe.allow="autoplay;fullscreen"
 iframe.id = PLAYER_ID;
 document.body.appendChild(iframe);
 var player = $f(iframe);
