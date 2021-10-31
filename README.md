@@ -26,6 +26,7 @@ the Vimeo player JS API (more information https://developer.vimeo.com/player/js-
           autoPlay={false}
           controls={true}
           speed={false}
+          time={'0m0s'}
         />
 ```
 
