@@ -22,7 +22,9 @@ export const Vimeo: React.FC<LayoutProps> = ({
   onError,
   containerStyle,
   getVimeoPlayer,
+  time,
 }) => {
+  const [initTime] = useState<string>(time ?? '0m0s')
   const [isPlaying, setPlaying] = useState<boolean>(false)
   const ref = useRef<WebView>()
 
@@ -125,7 +127,15 @@ export const Vimeo: React.FC<LayoutProps> = ({
     <WebView
       allowsFullscreenVideo={true}
       source={{
-        html: webplayer(videoId, loop, autoPlayValue, controls, speed, muted),
+        html: webplayer(
+          videoId,
+          loop,
+          autoPlayValue,
+          controls,
+          speed,
+          muted,
+          initTime
+        ),
       }}
       javaScriptEnabled={true}
       ref={ref as any}

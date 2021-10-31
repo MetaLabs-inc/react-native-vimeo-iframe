@@ -6,6 +6,7 @@ export interface LayoutProps {
   autoPlay: boolean
   controls: boolean
   speed?: boolean
+  time?: string
   onReady?: () => void
   onPlay?: () => void
   onPlayProgress?: (data: any) => void
