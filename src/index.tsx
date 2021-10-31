@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { Platform } from 'react-native'
 import { WebView } from 'react-native-webview'
 
 import webplayer from './template'
@@ -26,6 +27,7 @@ export const Vimeo: React.FC<LayoutProps> = ({
   const ref = useRef<WebView>()
 
   const [autoPlayValue, setAutoPlay] = useState<boolean>(autoPlay)
+  const muted = Platform.OS === 'android' && autoPlayValue
   const toggleAutoPlay = useCallback(() => setAutoPlay(!autoPlayValue), [
     autoPlayValue,
   ])
@@ -123,7 +125,7 @@ export const Vimeo: React.FC<LayoutProps> = ({
     <WebView
       allowsFullscreenVideo={true}
       source={{
-        html: webplayer(videoId, loop, autoPlayValue, controls, speed),
+        html: webplayer(videoId, loop, autoPlayValue, controls, speed, muted),
       }}
       javaScriptEnabled={true}
       ref={ref as any}
