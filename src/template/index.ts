@@ -4,7 +4,8 @@ export default (
   autoPlay: boolean,
   controls: boolean,
   speed: boolean,
-  muted: boolean
+  muted: boolean,
+  time: string
 ) => `
 <html><head>
 <title></title>
@@ -32,7 +33,7 @@ if (!vid) {
 let iframe;
 iframe = document.createElement('iframe');
 iframe.src =
- 'https://player.vimeo.com/video/' + vid + '?api=1' + '&autoplay=' + isAutoPlaying + '&loop=' + isLooping + '&controls=' + showControls  + '&speed=' + showSpeed +'&player_id=' + PLAYER_ID + '&muted=' + isMuted;
+'https://player.vimeo.com/video/' + vid + '?api=1' + '&autoplay=' + isAutoPlaying + '&loop=' + isLooping + '&controls=' + showControls  + '&speed=' + showSpeed +'&player_id=' + PLAYER_ID + '#t=${time}' ;
 iframe.width = '100%';
 iframe.height = '98%';
 iframe.frameBorder = '0';
