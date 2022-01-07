@@ -1,100 +1,34 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Platform } from 'react-native'
 import { WebView } from 'react-native-webview'
-
-import webplayer from './template'
-import { LayoutProps, PlayerActions, PlayerEvents } from './types'
+import { HandlerType, LayoutProps, PlayerEvents } from './types'
 
 export const Vimeo: React.FC<LayoutProps> = ({
   videoId,
-  onReady,
-  onPlay,
-  onPlayProgress,
-  onPause,
-  onFinish,
+  handlers: handlersArr,
   scalesPageToFit,
-  loop,
-  controls,
-  autoPlay,
-  speed = false,
-  style,
-  onVolumeChange,
-  onError,
+  loop = false,
+  controls = true,
+  autoPlay = false,
+  speed = true,
   containerStyle,
-  getVimeoPlayer,
-  time,
+  time = '0m0s',
 }) => {
-  const [initTime] = useState<string>(time ?? '0m0s')
-  const [isPlaying, setPlaying] = useState<boolean>(false)
-  const ref = useRef<WebView>()
-
-  const [autoPlayValue, setAutoPlay] = useState<boolean>(autoPlay)
+  const webRef = useRef<WebView>();
+  const [autoPlayValue, setAutoPlay] = useState<boolean>(Boolean(autoPlay))
   const muted = Platform.OS === 'android' && autoPlayValue
   const toggleAutoPlay = useCallback(() => setAutoPlay(!autoPlayValue), [
     autoPlayValue,
-  ])
+  ]);
 
+  const url: string = `https://player.vimeo.com/video/${videoId}?api=1&autoplay=${Number(autoPlay)}&loop=${Number(loop)}&controls=${Number(controls)}&speed=${Number(speed)}&muted=${Number(muted)}#t=${time}`;
   const handlers: any = {}
 
-  const player = useCallback(
-    (action: PlayerActions) => {
-      const handler = ref?.current?.injectJavaScript
-
-      if (handler) {
-        switch (action.type) {
-          case PlayerEvents.PLAY:
-            if (isPlaying) return
-            handler('play();')
-            setPlaying(true)
-            break
-          case PlayerEvents.PAUSE:
-            if (!isPlaying) return
-            handler('await pause();')
-            setPlaying(false)
-            break
-          case PlayerEvents.SET_TIME:
-            handler(`setTime(${action.time});`)
-            break
-          case PlayerEvents.GET_DURATION:
-            handler(`
-            const videoDuration = getDuration();
-            const callback = ${action.callback};
-            callback(videoDuration);
-          `)
-            break
-          default:
-            break
-        }
-      }
-    },
-    [ref, isPlaying]
-  )
-
-  const onReadyDefault = useCallback(() => {
-    onReady && setTimeout(onReady)
-  }, [onReady])
-
   const registerHandlers = useCallback(() => {
-    registerBridgeEventHandler('ready', onReadyDefault)
-    registerBridgeEventHandler('play', onPlay)
-    registerBridgeEventHandler('playProgress', onPlayProgress)
-    registerBridgeEventHandler('pause', onPause)
-    registerBridgeEventHandler('finish', onFinish)
-    registerBridgeEventHandler('volumeChange', onVolumeChange)
-    registerBridgeEventHandler('error', onError)
-  }, [
-    onReadyDefault,
-    onPlay,
-    onPlayProgress,
-    onError,
-    onVolumeChange,
-    onPause,
-    onFinish,
-  ])
-
-  const registerBridgeEventHandler = (eventName: string, handler: any) => {
-    handlers[eventName] = handler
-  }
+    PlayerEvents.forEach(name => {
+      handlers[name] = handlersArr?.filter((handler: HandlerType) => handler.name === name)[0]?.callback;
+    });
+  }, [handlersArr]);
 
   useEffect(() => {
     registerHandlers()
@@ -102,60 +36,77 @@ export const Vimeo: React.FC<LayoutProps> = ({
 
   const onBridgeMessage = useCallback(
     (event: any) => {
-      const message = event.nativeEvent.data
-      let payload
-      try {
-        payload = JSON.parse(message)
-        if (payload?.name === 'finish') {
-          toggleAutoPlay()
-        }
-      } catch (err) {
-        return
-      }
-
+      const payload: { name: string, data: any } = JSON.parse(event.nativeEvent.data);
+      
       let bridgeMessageHandler = handlers[payload?.name]
       if (bridgeMessageHandler) bridgeMessageHandler(payload?.data)
     },
     [toggleAutoPlay, handlers]
   )
 
-  useEffect(() => {
-    getVimeoPlayer && getVimeoPlayer(player)
-  }, [getVimeoPlayer, player])
-
   return (
     <WebView
       allowsFullscreenVideo={true}
-      source={{
-        html: webplayer(
-          videoId,
-          loop,
-          autoPlayValue,
-          controls,
-          speed,
-          muted,
-          initTime
-        ),
-      }}
+      source={{ uri: url }}
       javaScriptEnabled={true}
-      ref={ref as any}
+      ref={webRef as any}
       onMessage={onBridgeMessage}
       bounces={false}
       scrollEnabled={false}
       scalesPageToFit={scalesPageToFit}
       onError={(error) => console.error(error)}
-      style={[
-        {
-          marginTop: -8,
-          marginLeft: -10,
-        },
-        style,
-      ]}
       containerStyle={containerStyle}
       setBuiltInZoomControls={false}
       setDisplayZoomControls={false}
       automaticallyAdjustContentInsets
       onNavigationStateChange={(a) => console.log(a?.url)}
+      injectedJavaScript={`
+        const getOrientation = () => {
+          const orientation = document.fullscreenElement  ? 'landscape' : 'portrait';
+          return orientation;
+        };
+        
+        const sendEvent = (name, data) => {
+          window.ReactNativeWebView.postMessage(JSON.stringify({ name, data }));
+        };
+
+        (() => {
+          setTimeout(() => {
+            const video = document.querySelector('video');
+
+            window.addEventListener("fullscreenchange", (e) => {
+              const orientation = getOrientation();
+              sendEvent('fullscreenchange', { e, orientation });
+            }, false);
+            
+            video.addEventListener("timeupdate", (e) => {
+              const percent = Math.round((e.target.currentTime / e.target.duration)*100).toFixed();
+              sendEvent('timeupdate', { currentTime: e.target.currentTime, duration: e.target.duration, percent });
+            });
+
+            video.addEventListener('audioprocess', (e) => sendEvent('audioprocess', e));
+            video.addEventListener('canplay', (e) => sendEvent('canplay', e));
+            video.addEventListener('canplaythrough', (e) => sendEvent('canplaythrough', e));
+            video.addEventListener('complete', (e) => sendEvent('complete', e));
+            video.addEventListener('durationchange', (e) => sendEvent('durationchange', e));
+            video.addEventListener('emptied', (e) => sendEvent('emptied', e));
+            video.addEventListener('ended', (e) => sendEvent('ended', e));
+            video.addEventListener('loadeddata', (e) => sendEvent('loadeddata', e));
+            video.addEventListener('loadedmetadata', (e) => sendEvent('loadedmetadata', e));
+            video.addEventListener('pause', (e) => sendEvent('pause', e));
+            video.addEventListener('play', (e) => sendEvent('play', e));
+            video.addEventListener('playing', (e) => sendEvent('playing', e));
+            video.addEventListener('ratechange', (e) => sendEvent('ratechange', e));
+            video.addEventListener('seeked', (e) => sendEvent('seeked', e));
+            video.addEventListener('seeking', (e) => sendEvent('seeking', e));
+            video.addEventListener('stalled', (e) => sendEvent('stalled', e));
+            video.addEventListener('suspend', (e) => sendEvent('suspend', e));
+            video.addEventListener('timeupdate', (e) => sendEvent('timeupdate', e));
+            video.addEventListener('volumechange', (e) => sendEvent('volumechange', e));
+            video.addEventListener('waiting', (e) => sendEvent('waiting', e));
+          }, 1000);
+        })();
+      `}
     />
   )
 }
