@@ -16,18 +16,20 @@ the Vimeo player JS API (more information https://developer.vimeo.com/player/js-
 ## Usage
 
 ```
-        <Vimeo
-          videoId={'76979871'}
-          onReady={() => console.log('Video is ready')}
-          onPlay={() => console.log('Video is playing')}
-          onPlayProgress={(data) => console.log('Video progress data:', data)}
-          onFinish={() => console.log('Video is finished')}
-          loop={false}
-          autoPlay={false}
-          controls={true}
-          speed={false}
-          time={'0m0s'}
-        />
+  const videoCallbacks = { 
+    timeupdate: (data: any) => console.log('timeupdate: ', data),
+    play: (data: any) => console.log('play: ', data),
+    pause: (data: any) => console.log('pause: ', data),
+    fullscreenchange: (data: any) => console.log('fullscreenchange: ', data),
+    ended: (data: any) => console.log('ended: ', data),
+  };
+
+  return (
+    <Vimeo
+      videoId={'76979871'}
+      handlers={Object.keys(videoCallbacks).map((name) => ({ name, callback: videoCallbacks[name] }))}
+    />
+  )
 ```
 
 ## How it works
@@ -38,7 +40,7 @@ information to your application.
 
 ## Example
 
-If you want to see `MetaLabs-inc/react-native-vimeo-iframe` in action, just move into the [example](/example) folder and run `yarn && cd ios && pod install && cd .. && yarn ios` or `yarn && yarn android`. By seeing its source code, you will have a better understanding of the library usage.
+If you want to see `conquer-plus/react-native-vimeo-iframe` in action, just move into the [example](/example) folder and run `yarn && cd ios && pod install && cd .. && yarn ios` or `yarn && yarn android`. By seeing its source code, you will have a better understanding of the library usage.
 
 ## Contributors
 
@@ -47,7 +49,8 @@ If you want to see `MetaLabs-inc/react-native-vimeo-iframe` in action, just move
 <!-- markdownlint-disable -->
 <table>
   <tr>
-    <td align="center"><a href="https://github.com/Marcoo09"><img src="https://avatars.githubusercontent.com/Marcoo09" width="100px;" alt=""/><br /><sub><b>Marco Fiorito</b></sub></a><br />💻</td>
+    <td align="center"><a href="https://github.com/Marcoo09"><img src="https://avatars.githubusercontent.com/Marcoo09" width="100px;" alt=""/><br /><sub><b>Marco Fiorito</b></sub></a></td>
+    <td align="center"><a href="https://github.com/douglasrosa0110"><img src="https://avatars.githubusercontent.com/douglasrosa0110" width="100px;" alt=""/><br /><sub><b>Douglas Rosa</b></sub></a></td>
   </tr>
 </table>
 
