@@ -1,6 +1,6 @@
 {
   "name": "@conquerplus/react-native-web-video",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Library to render videos in a React Native app as webview listening all events supported on it",
   "homepage": "https://github.com/conquer-plus/react-native-web-video#readme",
   "main": "lib/commonjs/index.js",
