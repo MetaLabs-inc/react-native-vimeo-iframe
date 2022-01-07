@@ -1,8 +1,11 @@
 import React from 'react'
 import { SafeAreaView, View } from 'react-native'
-import { Vimeo } from '../../src/index';
+import { WebVideo } from '../../src/index';
 
 const App = () => {
+  const videoId = 76979871;
+  const params: string = `api=1&autoplay=0`;
+  const url: string = `https://player.vimeo.com/video/${videoId}?${params}`;
   const videoCallbacks = { 
     timeupdate: (data: any) => console.log('timeupdate: ', data),
     play: (data: any) => console.log('play: ', data),
@@ -10,13 +13,13 @@ const App = () => {
     fullscreenchange: (data: any) => console.log('fullscreenchange: ', data),
     ended: (data: any) => console.log('ended: ', data),
   };
-
+  
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.mainContainer}>
-        <Vimeo
-          videoId={'76979871'}
-          handlers={Object.keys(videoCallbacks).map((name) => ({ name, callback: videoCallbacks[name] }))}
+        <WebVideo 
+          url={url}
+          handlers={videoCallbacks}
         />
       </View>
     </SafeAreaView>
