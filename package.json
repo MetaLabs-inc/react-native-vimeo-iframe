@@ -1,14 +1,14 @@
 {
-  "name": "react-native-vimeo-iframe",
+  "name": "@conquerplus/react-native-vimeo-iframe",
   "version": "1.0.4",
   "description": "React Native Vimeo Iframe is a library to render Vimeo videos in a React Native app. This component allows you to embed a Vimeo video in your app and have full access to the Vimeo player JS API (more information https://developer.vimeo.com/player/js-api).",
-  "homepage": "https://github.com/MetaLabs-inc/react-native-vimeo-iframe#readme",
+  "homepage": "https://github.com/conquer-plus/react-native-vimeo-iframe#readme",
   "main": "lib/commonjs/index.js",
   "types": "lib/typescript/index.d.ts",
   "module": "lib/module/index.js",
   "react-native": "src/index.tsx",
   "source": "src/index.tsx",
-  "author": "Marco Fiorito <marcofiorito1@gmail.com>",
+  "author": "Marco Fiorito <marcofiorito1@gmail.com>, Douglas Rosa <douglasrosa0110@gmail.com>",
   "license": "MIT",
   "files": [
     "src",
@@ -17,19 +17,16 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/MetaLabs-inc/react-native-vimeo-iframe"
+    "url": "https://github.com/conquer-plus/react-native-vimeo-iframe"
   },
   "keywords": [
-    "android",
-    "ios",
     "react native",
-    "component library",
     "vimeo",
-    "videos"
+    "video",
+    "webview"
   ],
   "scripts": {
     "typescript": "tsc --noEmit",
-    "prepare": "bob build && node ./scripts/generate-mappings.js",
     "compile": "rm -rf lib && tsc -p .",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "test": "jest"
