@@ -1,38 +1,26 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Platform } from 'react-native'
 import { WebView } from 'react-native-webview'
-import { HandlerType, LayoutProps, PlayerEvents } from './types'
+import { LayoutProps, PlayerEvents } from './types'
 
-export const Vimeo: React.FC<LayoutProps> = ({
-  videoId,
+export const WebVideo: React.FC<LayoutProps> = ({
   handlers: handlersArr,
   scalesPageToFit,
-  loop = false,
-  controls = true,
-  autoPlay = false,
-  speed = true,
+  url,
   containerStyle,
-  time = '0m0s',
 }) => {
   const webRef = useRef<WebView>();
-  const [autoPlayValue, setAutoPlay] = useState<boolean>(Boolean(autoPlay))
-  const muted = Platform.OS === 'android' && autoPlayValue
-  const toggleAutoPlay = useCallback(() => setAutoPlay(!autoPlayValue), [
-    autoPlayValue,
-  ]);
-
-  const url: string = `https://player.vimeo.com/video/${videoId}?api=1&autoplay=${Number(autoPlay)}&loop=${Number(loop)}&controls=${Number(controls)}&speed=${Number(speed)}&muted=${Number(muted)}#t=${time}`;
   const handlers: any = {}
 
   const registerHandlers = useCallback(() => {
     PlayerEvents.forEach(name => {
-      handlers[name] = handlersArr?.filter((handler: HandlerType) => handler.name === name)[0]?.callback;
+      if(handlersArr) handlers[name] = handlersArr[name];
     });
   }, [handlersArr]);
 
   useEffect(() => {
     registerHandlers()
-  }, [videoId, scalesPageToFit])
+  }, [url, scalesPageToFit])
 
   const onBridgeMessage = useCallback(
     (event: any) => {
@@ -41,7 +29,7 @@ export const Vimeo: React.FC<LayoutProps> = ({
       let bridgeMessageHandler = handlers[payload?.name]
       if (bridgeMessageHandler) bridgeMessageHandler(payload?.data)
     },
-    [toggleAutoPlay, handlers]
+    [handlers]
   )
 
   return (

@@ -2,23 +2,18 @@ import { StyleProp, ViewStyle } from 'react-native'
 
 export type BooleanType = boolean | 1 | 0;
 export type CallbackType = (data?: any) => void;
-export type HandlerType = {
-  name: PlayerEvent
-  callback: CallbackType
-}
-
 export interface LayoutProps {
-  videoId: string
   loop?: BooleanType
   autoPlay?: BooleanType
   controls?: BooleanType
   speed?: BooleanType
   time?: `${number}h${number}m${number}s`
-  handlers?: HandlerType[]
+  handlers?: { [key: string]: any }
   scalesPageToFit?: boolean
   style?: StyleProp<ViewStyle>
   containerStyle?: StyleProp<ViewStyle>
   getVimeoPlayer?: any
+  url: string
 }
 
 export const PlayerEvents = [
