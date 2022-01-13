@@ -61,6 +61,7 @@ export const WebVideo: React.FC<LayoutProps> = ({
         (() => {
           setTimeout(() => {
             const video = document.querySelector('video');
+            const controls = document.querySelector('.vp-controls');
 
             window.addEventListener("fullscreenchange", (e) => {
               const orientation = getOrientation();
@@ -92,6 +93,15 @@ export const WebVideo: React.FC<LayoutProps> = ({
             video.addEventListener('timeupdate', (e) => sendEvent('timeupdate', e));
             video.addEventListener('volumechange', (e) => sendEvent('volumechange', e));
             video.addEventListener('waiting', (e) => sendEvent('waiting', e));
+
+            new MutationObserver((mutationsList, observer) => {
+              for(const mutation of mutationsList) 
+                if (mutation.type === 'attributes') {
+                  const visible = !controls.classList.contains("invisible");
+                  sendEvent('controlschange', { visible });
+                }
+            }).observe(controls, { attributes: true, childList: false, subtree: false });
+
           }, 1000);
         })();
       `}

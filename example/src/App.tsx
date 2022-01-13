@@ -12,6 +12,7 @@ const App = () => {
     pause: (data: any) => console.log('pause: ', data),
     fullscreenchange: (data: any) => console.log('fullscreenchange: ', data),
     ended: (data: any) => console.log('ended: ', data),
+    controlschange: (data: any) => console.log('controlschange: ', data),
   };
   
   return (

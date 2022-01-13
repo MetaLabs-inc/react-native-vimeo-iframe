@@ -17,6 +17,7 @@ export interface LayoutProps {
 }
 
 export const PlayerEvents = [
+  'controlschange', // The visibility of the controls changed.
   'fullscreenchange', // The orientation was changed.
   'audioprocess', // A entrada do buffer de ScriptProcessorNode está pronta para ser processada
   'canplay', // O navegador pode reproduzir o arquivo, mas estima que não haverá dados suficientes para reproduzir o arquivo sem interrupções para recarregar o buffer.
