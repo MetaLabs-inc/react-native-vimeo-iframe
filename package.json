@@ -1,6 +1,6 @@
 {
   "name": "@conquerplus/react-native-web-video",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Library to render videos in a React Native app as webview listening all events supported on it",
   "homepage": "https://github.com/conquer-plus/react-native-web-video#readme",
   "main": "lib/commonjs/index.js",
@@ -29,7 +29,8 @@
     "typescript": "tsc --noEmit",
     "compile": "rm -rf lib && tsc -p .",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "test": "jest"
+    "test": "jest",
+    "npm": "npm publish --access=public"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",

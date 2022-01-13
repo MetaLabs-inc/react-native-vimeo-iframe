@@ -19,6 +19,7 @@ This component allows you to embed a video in your app and listen actions.
     pause: (data: any) => console.log('pause: ', data),
     fullscreenchange: (data: any) => console.log('fullscreenchange: ', data),
     ended: (data: any) => console.log('ended: ', data),
+    controlschange: (data: any) => console.log('controlschange: ', data),
   };
 
   return (
@@ -28,6 +29,7 @@ This component allows you to embed a video in your app and listen actions.
 
 ## Supported listeners
 ```
+'controlschange', // The visibility of the controls changed.
 'fullscreenchange', // The orientation was changed.
 'audioprocess', // A entrada do buffer de ScriptProcessorNode está pronta para ser processada
 'canplay', // O navegador pode reproduzir o arquivo, mas estima que não haverá dados suficientes para reproduzir o arquivo sem interrupções para recarregar o buffer.
