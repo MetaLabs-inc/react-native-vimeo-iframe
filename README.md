@@ -2,6 +2,11 @@
 Library to render videos in a React Native app as a webview.
 This component allows you to embed a video in your app and listen actions.
 
+
+!!! WARNING !!!
+If don't works anyway, just copy the two files in the /src (index.ts, types.ts) into your project folder (of your choice), import them and use it!
+
+
 ## Installation
 1. Go through the instructions for installing the
    `React Native Webview` library: https://github.com/react-native-webview/react-native-webview.
