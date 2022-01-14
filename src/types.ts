@@ -14,6 +14,7 @@ export interface LayoutProps {
   containerStyle?: StyleProp<ViewStyle>
   getVimeoPlayer?: any
   url: string
+  height?: number | string
 }
 
 export const PlayerEvents = [

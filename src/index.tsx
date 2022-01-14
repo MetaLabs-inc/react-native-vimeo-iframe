@@ -1,13 +1,11 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { Platform } from 'react-native'
+import React, { useCallback, useRef } from 'react'
 import { WebView } from 'react-native-webview'
 import { LayoutProps, PlayerEvents } from './types'
 
-export const WebVideo: React.FC<LayoutProps> = ({
+const WebVideo: React.FC<LayoutProps> = ({
   handlers: handlersArr,
-  scalesPageToFit,
   url,
-  containerStyle,
+  height
 }) => {
   const webRef = useRef<WebView>();
   const handlers: any = {}
@@ -18,9 +16,7 @@ export const WebVideo: React.FC<LayoutProps> = ({
     });
   }, [handlersArr]);
 
-  useEffect(() => {
-    registerHandlers()
-  }, [url, scalesPageToFit])
+  registerHandlers();
 
   const onBridgeMessage = useCallback(
     (event: any) => {
@@ -34,19 +30,13 @@ export const WebVideo: React.FC<LayoutProps> = ({
 
   return (
     <WebView
+      style={{ height, }}
       allowsFullscreenVideo={true}
       source={{ uri: url }}
       javaScriptEnabled={true}
       ref={webRef as any}
       onMessage={onBridgeMessage}
-      bounces={false}
       scrollEnabled={false}
-      scalesPageToFit={scalesPageToFit}
-      onError={(error) => console.error(error)}
-      containerStyle={containerStyle}
-      setBuiltInZoomControls={false}
-      setDisplayZoomControls={false}
-      automaticallyAdjustContentInsets
       onNavigationStateChange={(a) => console.log(a?.url)}
       injectedJavaScript={`
         const getOrientation = () => {
@@ -58,21 +48,21 @@ export const WebVideo: React.FC<LayoutProps> = ({
           window.ReactNativeWebView.postMessage(JSON.stringify({ name, data }));
         };
 
-        (() => {
-          setTimeout(() => {
-            const video = document.querySelector('video');
-            const controls = document.querySelector('.vp-controls');
+        const addListeners = () => {
+          const video = document.querySelector('video');
+          const controls = document.querySelector('.vp-controls');
+          let isVisibleControls = ${!url.includes('controls=0')};
 
-            window.addEventListener("fullscreenchange", (e) => {
-              const orientation = getOrientation();
-              sendEvent('fullscreenchange', { e, orientation });
-            }, false);
-            
+          window.addEventListener("fullscreenchange", (e) => {
+            const orientation = getOrientation();
+            sendEvent('fullscreenchange', { e, orientation });
+          }, false);
+          
+          if(video) {
             video.addEventListener("timeupdate", (e) => {
               const percent = Math.round((e.target.currentTime / e.target.duration)*100).toFixed();
               sendEvent('timeupdate', { currentTime: e.target.currentTime, duration: e.target.duration, percent });
             });
-
             video.addEventListener('audioprocess', (e) => sendEvent('audioprocess', e));
             video.addEventListener('canplay', (e) => sendEvent('canplay', e));
             video.addEventListener('canplaythrough', (e) => sendEvent('canplaythrough', e));
@@ -93,18 +83,23 @@ export const WebVideo: React.FC<LayoutProps> = ({
             video.addEventListener('timeupdate', (e) => sendEvent('timeupdate', e));
             video.addEventListener('volumechange', (e) => sendEvent('volumechange', e));
             video.addEventListener('waiting', (e) => sendEvent('waiting', e));
-
-            new MutationObserver((mutationsList, observer) => {
-              for(const mutation of mutationsList) 
-                if (mutation.type === 'attributes') {
-                  const visible = !controls.classList.contains("invisible");
-                  sendEvent('controlschange', { visible });
-                }
-            }).observe(controls, { attributes: true, childList: false, subtree: false });
-
-          }, 1000);
-        })();
+          }
+          
+          setInterval(()=>{
+            if(controls) {
+              const visible = !controls.classList.contains("invisible");
+              if(visible !== isVisibleControls){
+                isVisibleControls = visible;
+                sendEvent('controlschange', { visible });
+              }
+            }
+          },300);
+        };
+        // =============================
+        setTimeout(addListeners(), 1000);
       `}
     />
   )
-}
+};
+
+export default WebVideo;
