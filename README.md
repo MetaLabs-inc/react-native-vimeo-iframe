@@ -8,10 +8,8 @@ the Vimeo player JS API (more information https://developer.vimeo.com/player/js-
 
 1. Go through the instructions for installing the
    `React Native Webview` library: https://github.com/react-native-webview/react-native-webview.
-
-1. Run `npm install react-native-vimeo-iframe` or `yarn add react-native-vimeo-iframe` within your project.
-
-1. Compile and build to make sure everything is set up properly.
+2. Run `yarn add react-native-web-video` within your project.
+3. Compile and build to make sure everything is set up properly.
 
 ## Usage
 
@@ -47,7 +45,9 @@ If you want to see `MetaLabs-inc/react-native-vimeo-iframe` in action, just move
 <!-- markdownlint-disable -->
 <table>
   <tr>
-    <td align="center"><a href="https://github.com/Marcoo09"><img src="https://avatars.githubusercontent.com/Marcoo09" width="100px;" alt=""/><br /><sub><b>Marco Fiorito</b></sub></a><br />💻</td>
+    <td align="center"><a href="https://github.com/Marcoo09"><img src="https://avatars.githubusercontent.com/Marcoo09" width="100px;" alt=""/><br /><sub><b>Marco Fiorito</b></sub></a></td>
+    <td align="center"><a href="https://github.com/douglasrosa0110"><img src="https://avatars.githubusercontent.com/douglasrosa0110" width="100px;" alt=""/><br /><sub><b>Douglas Rosa</b></sub></a></td>
+    <td align="center"><a href="https://github.com/felipe-najson"><img src="https://avatars.githubusercontent.com/felipe-najson" width="100px;" alt=""/><br /><sub><b>Douglas Rosa</b></sub></a></td>
   </tr>
 </table>
 
