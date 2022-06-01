@@ -14,25 +14,50 @@ the Vimeo player JS API (more information https://developer.vimeo.com/player/js-
 ## Usage
 
 ```
-        <Vimeo
-          videoId={'76979871'}
-          onReady={() => console.log('Video is ready')}
-          onPlay={() => console.log('Video is playing')}
-          onPlayProgress={(data) => console.log('Video progress data:', data)}
-          onFinish={() => console.log('Video is finished')}
-          loop={false}
-          autoPlay={false}
-          controls={true}
-          speed={false}
-          time={'0m0s'}
-        />
+  const videoCallbacks = {
+    timeupdate: (data: any) => console.log('timeupdate: ', data),
+    play: (data: any) => console.log('play: ', data),
+    pause: (data: any) => console.log('pause: ', data),
+    fullscreenchange: (data: any) => console.log('fullscreenchange: ', data),
+    ended: (data: any) => console.log('ended: ', data),
+    controlschange: (data: any) => console.log('controlschange: ', data),
+  };
+
+  return (
+     <Vimeo
+            videoId={'712158285'}
+            params={'api=1&autoplay=0'}
+            handlers={videoCallbacks}
+          />
+  )
 ```
 
-## How it works
+## Supported listeners
 
-Internally, a webview loads a HTML page. This HTML page loads your
-Vimeo video in an iFrame, then uses the Froogaloop JS library provided by Vimeo to pass event
-information to your application.
+```
+'controlschange', // The visibility of the controls changed.
+'fullscreenchange', // The orientation was changed.
+'audioprocess', // A entrada do buffer de ScriptProcessorNode está pronta para ser processada
+'canplay', // The browser can play the file, but estimates that there will not be enough data to play the file without interruption to reload the buffer.
+'canplaythrough', // The browser estimates that it will be able to play the file without interruption until the end.
+'complete', // OfflineAudioContext rendering is finished.
+'durationchange', // The duration attribute has been updated.
+'emptied', // Absence of content. For example, this event is sent if the media has been loaded (or partially) and the load() method has been called to reload the content.
+'ended', // Playback ended due to end of content
+'loadeddata', // The first frame of media has been loaded.
+'loadedmetadata', // The metadata has been loaded.
+'pause', // Playback has been paused.
+'play', // Playback has started.
+'playing', // Playback is ready to start after being paused, or delayed due to lack of data.
+'ratechange', // Playback rate has changed.
+'seeked', // Search operation completed.
+'seeking', // Search operation started.
+'stalled', // The user agent is trying to fetch media data, but data is unexpectedly not forthcoming.
+'suspend', // Media data loading has been suspended.
+'timeupdate', // The time indicated by the currentTime attribute has been updated.
+'volumechange', // The volume has changed.
+'waiting'
+```
 
 ## Example
 

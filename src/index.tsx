@@ -11,7 +11,10 @@ export const Vimeo: React.FC<LayoutProps> = ({
   params,
 }) => {
   const webRef = useRef<WebView>()
-  const url: string = `https://player.vimeo.com/video/${videoId}?${params}`
+  const url: string = params
+    ? `https://player.vimeo.com/video/${videoId}?${params}`
+    : `https://player.vimeo.com/video/${videoId}`
+
   const handlers: any = {}
 
   const registerHandlers = useCallback(() => {

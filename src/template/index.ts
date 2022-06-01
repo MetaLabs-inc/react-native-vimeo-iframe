@@ -7,6 +7,7 @@ const getOrientation = () => {
 const sendEvent = (name, data) => {
   window.ReactNativeWebView.postMessage(JSON.stringify({ name, data }));
 };
+
 const addListeners = () => {
   const video = document.querySelector('video');
   const controls = document.querySelector('.vp-controls');
@@ -53,6 +54,6 @@ const addListeners = () => {
     }
   },300);
 };
-// =============================
+
 setTimeout(addListeners(), 1000);
 `
