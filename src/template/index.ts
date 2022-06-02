@@ -1,82 +1,59 @@
-export default (
-  videoId: string,
-  loop: boolean,
-  autoPlay: boolean,
-  controls: boolean,
-  speed: boolean,
-  muted: boolean,
-  time: string
-) => `
-<html><head>
-<title></title>
-<script src="https://f.vimeocdn.com/js/froogaloop2.min.js"></script>
-<script src="https://player.vimeo.com/api/player.js"></script>
-</head>
-<body style="height: 100%; width: 100%;" data-new-gr-c-s-check-loaded="14.996.0" data-gr-ext-installed="" cz-shortcut-listen="true">
+export default (url: string) => `
+const getOrientation = () => {
+  const orientation = document.fullscreenElement  ? 'landscape' : 'portrait';
+  return orientation;
+};
 
+const sendEvent = (name, data) => {
+  window.ReactNativeWebView.postMessage(JSON.stringify({ name, data }));
+};
 
-<script>
-var PLAYER_ID = 'player';
+const addListeners = () => {
+  const video = document.querySelector('video');
+  const controls = document.querySelector('.vp-controls');
+  let isVisibleControls = ${!url.includes('controls=0')};
+  window.addEventListener("fullscreenchange", (e) => {
+    const orientation = getOrientation();
+    sendEvent('fullscreenchange', { e, orientation });
+  }, false);
+  
+  if(video) {
+    video.addEventListener("timeupdate", (e) => {
+      const percent = Math.round((e.target.currentTime / e.target.duration)*100).toFixed();
+      sendEvent('timeupdate', { currentTime: e.target.currentTime, duration: e.target.duration, percent });
+    });
+    video.addEventListener('audioprocess', (e) => sendEvent('audioprocess', e));
+    video.addEventListener('canplay', (e) => sendEvent('canplay', e));
+    video.addEventListener('canplaythrough', (e) => sendEvent('canplaythrough', e));
+    video.addEventListener('complete', (e) => sendEvent('complete', e));
+    video.addEventListener('durationchange', (e) => sendEvent('durationchange', e));
+    video.addEventListener('emptied', (e) => sendEvent('emptied', e));
+    video.addEventListener('ended', (e) => sendEvent('ended', e));
+    video.addEventListener('loadeddata', (e) => sendEvent('loadeddata', e));
+    video.addEventListener('loadedmetadata', (e) => sendEvent('loadedmetadata', e));
+    video.addEventListener('pause', (e) => sendEvent('pause', e));
+    video.addEventListener('play', (e) => sendEvent('play', e));
+    video.addEventListener('playing', (e) => sendEvent('playing', e));
+    video.addEventListener('ratechange', (e) => sendEvent('ratechange', e));
+    video.addEventListener('seeked', (e) => sendEvent('seeked', e));
+    video.addEventListener('seeking', (e) => sendEvent('seeking', e));
+    video.addEventListener('stalled', (e) => sendEvent('stalled', e));
+    video.addEventListener('suspend', (e) => sendEvent('suspend', e));
+    video.addEventListener('timeupdate', (e) => sendEvent('timeupdate', e));
+    video.addEventListener('volumechange', (e) => sendEvent('volumechange', e));
+    video.addEventListener('waiting', (e) => sendEvent('waiting', e));
+  }
+  
+  setInterval(()=>{
+    if(controls) {
+      const visible = !controls.classList.contains("invisible");
+      if(visible !== isVisibleControls){
+        isVisibleControls = visible;
+        sendEvent('controlschange', { visible });
+      }
+    }
+  },300);
+};
 
-function webViewBridge() {
-const vid = '${videoId}';
-const isLooping = ${loop} ? '1' : '0';
-const isAutoPlaying = ${autoPlay} ? '1' : '0';
-const showControls = ${controls} ? '1' : '0';
-const showSpeed = ${speed} ? '1' : '0';
-const isMuted = ${muted} ? '1' : '0';
-
-if (!vid) {
-  return;
-}
-
-let iframe;
-iframe = document.createElement('iframe');
-iframe.src =
- 'https://player.vimeo.com/video/' + vid + '?api=1' + '&autoplay=' + isAutoPlaying + '&loop=' + isLooping + '&controls=' + showControls  + '&speed=' + showSpeed +'&player_id=' + PLAYER_ID + '&muted=' + isMuted + '#t=${time}';
-iframe.width = '100%';
-iframe.height = '98%';
-iframe.frameBorder = '0';
-iframe.webkitallowfullscreen = true;
-iframe.allowfullscreen = true;
-iframe.mozallowfullscreen = true;
-iframe.allow="autoplay;fullscreen"
-iframe.id = PLAYER_ID;
-document.body.appendChild(iframe);
-var player = $f(iframe);
-player.addEvent('ready', function() {
-  // Ideally we could just iterate over event names and add the sendEvent
-  // handler to each of them, however that doesn't work because sendEvent
-  // ends up just being called with whatever was the last event in the array.
-  player.addEvent('play', function(data) {
-    sendEvent('play', data);
-  });
-  player.addEvent('playProgress', function(data) {
-    sendEvent('playProgress', data);
-  });
-  player.addEvent('pause', function(data) {
-    sendEvent('pause', data);
-  });
-  player.addEvent('finish', function(data) {
-    sendEvent('finish', data);
-  });
-  sendEvent('ready');
-});
-
-player.api(message, function(data) {
-  sendEvent(message, data);
-});
-const  sendEvent = (evt, data) => {
-  // Passes events through the bridge
-  var payload = {
-    name: evt,
-    data: data
-  };
-  window.ReactNativeWebView.postMessage(JSON.stringify(payload));
-}
-}
-
-webViewBridge();
-</script>
-</body></html>
+setTimeout(addListeners(), 1000);
 `

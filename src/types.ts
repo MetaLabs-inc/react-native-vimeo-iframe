@@ -1,33 +1,43 @@
 import { StyleProp, ViewStyle } from 'react-native'
 
+export type CallbackType = (data?: any) => void
 export interface LayoutProps {
-  videoId: string
-  loop: boolean
-  autoPlay: boolean
-  controls: boolean
+  loop?: boolean
+  autoPlay?: boolean
+  controls?: boolean
   speed?: boolean
-  time?: string
-  onReady?: () => void
-  onPlay?: () => void
-  onPlayProgress?: (data: any) => void
-  onPause?: () => void
-  onFinish?: () => void
-  onVolumeChange?: () => void
-  onError?: () => void
+  time?: `${number}h${number}m${number}s`
+  handlers?: { [key: string]: any }
   scalesPageToFit?: boolean
   style?: StyleProp<ViewStyle>
   containerStyle?: StyleProp<ViewStyle>
   getVimeoPlayer?: any
+  videoId: string
+  params?: string
 }
 
-export enum PlayerEvents {
-  PLAY = 'play',
-  PAUSE = 'pause',
-  SET_TIME = 'set_time',
-  GET_DURATION = 'get_duration',
-}
-export interface PlayerActions {
-  type?: PlayerEvents
-  time?: number
-  callback?: any
-}
+export const PlayerEvents = [
+  'controlschange',
+  'fullscreenchange',
+  'audioprocess',
+  'canplay',
+  'canplaythrough',
+  'complete',
+  'durationchange',
+  'emptied',
+  'ended',
+  'loadeddata',
+  'loadedmetadata',
+  'pause',
+  'play',
+  'playing',
+  'ratechange',
+  'seeked',
+  'seeking',
+  'stalled',
+  'suspend',
+  'timeupdate',
+  'volumechange',
+] as const
+
+export type PlayerEvent = typeof PlayerEvents[number]
