@@ -18,7 +18,11 @@ const App = () => {
         <Text style={styles.title}>React Native Vimeo Iframe</Text>
         <View style={styles.videosContainer}>
           <Vimeo videoId={'712158285'} handlers={videoCallbacks} />
-          <Vimeo videoId={'712158996'} handlers={videoCallbacks} />
+          <Vimeo
+            videoId={'712158996'}
+            handlers={videoCallbacks}
+            params={'muted=1'}
+          />
           <Vimeo
             videoId={'712159936'}
             handlers={videoCallbacks}
