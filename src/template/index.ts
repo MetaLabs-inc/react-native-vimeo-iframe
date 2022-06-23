@@ -39,7 +39,7 @@ const addListeners = () => {
     video.addEventListener('seeking', (e) => sendEvent('seeking', e));
     video.addEventListener('stalled', (e) => sendEvent('stalled', e));
     video.addEventListener('suspend', (e) => sendEvent('suspend', e));
-    video.addEventListener('timeupdate', (e) => sendEvent('timeupdate', e));
+//     video.addEventListener('timeupdate', (e) => sendEvent('timeupdate', e));
     video.addEventListener('volumechange', (e) => sendEvent('volumechange', e));
     video.addEventListener('waiting', (e) => sendEvent('waiting', e));
   }
@@ -55,5 +55,5 @@ const addListeners = () => {
   },300);
 };
 
-setTimeout(addListeners(), 1000);
+setTimeout(function(){addListeners()}, 1000);
 `
