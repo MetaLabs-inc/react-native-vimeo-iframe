@@ -8,7 +8,7 @@ the Vimeo player JS API (more information https://developer.vimeo.com/player/js-
 
 1. Go through the instructions for installing the
    `React Native Webview` library: https://github.com/react-native-webview/react-native-webview.
-2. Run `npm install react-native-vimeo-iframe` or `yarn add react-native-web-video` within your project.
+2. Run `npm install react-native-vimeo-iframe` or `yarn add react-native-vimeo-iframe` within your project.
 3. Compile and build to make sure everything is set up properly.
 
 ## Usage
