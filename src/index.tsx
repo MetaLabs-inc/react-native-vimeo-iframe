@@ -9,6 +9,7 @@ export const Vimeo: React.FC<LayoutProps> = ({
   style,
   videoId,
   params,
+  reference,
 }) => {
   const webRef = useRef<WebView>()
   const url: string = params
@@ -41,7 +42,7 @@ export const Vimeo: React.FC<LayoutProps> = ({
     <WebView
       style={style}
       allowsFullscreenVideo={true}
-      source={{ uri: url }}
+      source={{ uri: url,headers: { Referer: reference }, }}
       javaScriptEnabled={true}
       ref={webRef as any}
       onMessage={onBridgeMessage}
