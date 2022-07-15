@@ -14,6 +14,7 @@ export interface LayoutProps {
   getVimeoPlayer?: any
   videoId: string
   params?: string
+  reference?: string
 }
 
 export const PlayerEvents = [
