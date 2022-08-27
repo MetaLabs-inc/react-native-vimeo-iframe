@@ -59,6 +59,16 @@ the Vimeo player JS API (more information https://developer.vimeo.com/player/js-
 'waiting'
 ```
 
+## Available Props
+
+| Name         | Type                     | Default   | Description                                                                      |
+| ------------ | ------------------------ | --------- | -------------------------------------------------------------------------------- |
+| `handlers`   | `{ [key: string]: any }` | {}        | Listeners to be attached in the Vimeo Player                                     |
+| `videoId`    | `string`                 | undefined | The video id which will be rendered                                              |
+| `params`     | `string`                 | undefined | Extra params to be attached on the vimeo player url                              |
+| `reference`  | `string`                 | undefined | In order to support private videos you can specify the reference prop            |
+| `otherProps` | `WebViewProps`           | {}        | To customize the webview that wraps the player, you can specify additional props |
+
 ## Example
 
 If you want to see `MetaLabs-inc/react-native-vimeo-iframe` in action, just move into the [example](/example) folder and run `yarn && cd ios && pod install && cd .. && yarn ios` or `yarn && yarn android`. By seeing its source code, you will have a better understanding of the library usage.
@@ -73,6 +83,8 @@ If you want to see `MetaLabs-inc/react-native-vimeo-iframe` in action, just move
     <td align="center"><a href="https://github.com/Marcoo09"><img src="https://avatars.githubusercontent.com/Marcoo09" width="100px;" alt=""/><br /><sub><b>Marco Fiorito</b></sub></a></td>
     <td align="center"><a href="https://github.com/douglasrosa0110"><img src="https://avatars.githubusercontent.com/douglasrosa0110" width="100px;" alt=""/><br /><sub><b>Douglas Rosa</b></sub></a></td>
     <td align="center"><a href="https://github.com/felipe-najson"><img src="https://avatars.githubusercontent.com/felipe-najson" width="100px;" alt=""/><br /><sub><b>Felipe Najson</b></sub></a></td>
+    <td align="center"><a href="https://github.com/yjb94"><img src="https://avatars.githubusercontent.com/yjb94" width="100px;" alt=""/><br /><sub><b>JB Paul</b></sub></a></td>
+    <td align="center"><a href="https://github.com/SalmanK81099"><img src="https://avatars.githubusercontent.com/SalmanK81099" width="100px;" alt=""/><br /><sub><b>Salman Khan</b></sub></a></td>
   </tr>
 </table>
 
