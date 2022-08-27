@@ -6,10 +6,10 @@ import { LayoutProps, PlayerEvents } from './types'
 
 export const Vimeo: React.FC<LayoutProps> = ({
   handlers: handlersArr,
-  style,
   videoId,
   params,
   reference,
+  ...otherProps
 }) => {
   const webRef = useRef<WebView>()
   const url: string = params
@@ -40,7 +40,6 @@ export const Vimeo: React.FC<LayoutProps> = ({
 
   return (
     <WebView
-      style={style}
       allowsFullscreenVideo={true}
       source={{ uri: url,headers: { Referer: reference }, }}
       javaScriptEnabled={true}
@@ -49,6 +48,7 @@ export const Vimeo: React.FC<LayoutProps> = ({
       scrollEnabled={false}
       onNavigationStateChange={(a) => console.log(a?.url)}
       injectedJavaScript={template(url)}
+      {...otherProps}
     />
   )
 }
