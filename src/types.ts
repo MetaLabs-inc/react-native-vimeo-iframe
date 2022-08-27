@@ -1,16 +1,13 @@
-import { StyleProp, ViewStyle } from 'react-native'
+import { WebViewProps } from 'react-native-webview'
 
 export type CallbackType = (data?: any) => void
-export interface LayoutProps {
+export interface LayoutProps extends WebViewProps {
   loop?: boolean
   autoPlay?: boolean
   controls?: boolean
   speed?: boolean
   time?: `${number}h${number}m${number}s`
   handlers?: { [key: string]: any }
-  scalesPageToFit?: boolean
-  style?: StyleProp<ViewStyle>
-  containerStyle?: StyleProp<ViewStyle>
   getVimeoPlayer?: any
   videoId: string
   params?: string
