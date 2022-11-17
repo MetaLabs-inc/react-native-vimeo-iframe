@@ -46,7 +46,6 @@ export const Vimeo: React.FC<LayoutProps> = ({
       ref={webRef as any}
       onMessage={onBridgeMessage}
       scrollEnabled={false}
-      onNavigationStateChange={(a) => console.log(a?.url)}
       injectedJavaScript={template(url)}
       {...otherProps}
     />
