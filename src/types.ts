@@ -2,13 +2,7 @@ import { WebViewProps } from 'react-native-webview'
 
 export type CallbackType = (data?: any) => void
 export interface LayoutProps extends WebViewProps {
-  loop?: boolean
-  autoPlay?: boolean
-  controls?: boolean
-  speed?: boolean
-  time?: `${number}h${number}m${number}s`
   handlers?: { [key: string]: any }
-  getVimeoPlayer?: any
   videoId: string
   params?: string
   reference?: string
