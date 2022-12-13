@@ -50,7 +50,7 @@ export const Vimeo: React.FC<LayoutProps> = ({
       scrollEnabled={false}
       onNavigationStateChange={(a) => console.log(a?.url)}
       injectedJavaScript={template(url)}
-      mediaPlaybackRequiresUserAction={autoPlay}
+      mediaPlaybackRequiresUserAction={!autoPlay}
       {...otherProps}
     />
   )
