@@ -16,6 +16,8 @@ export const Vimeo: React.FC<LayoutProps> = ({
     ? `https://player.vimeo.com/video/${videoId}?${params}`
     : `https://player.vimeo.com/video/${videoId}`
 
+  const autoPlay = params?.includes('autoplay=1')
+
   const handlers: any = {}
 
   const registerHandlers = useCallback(() => {
@@ -41,12 +43,13 @@ export const Vimeo: React.FC<LayoutProps> = ({
   return (
     <WebView
       allowsFullscreenVideo={true}
-      source={{ uri: url,headers: { Referer: reference }, }}
+      source={{ uri: url, headers: { Referer: reference } }}
       javaScriptEnabled={true}
       ref={webRef as any}
       onMessage={onBridgeMessage}
       scrollEnabled={false}
       injectedJavaScript={template(url)}
+      mediaPlaybackRequiresUserAction={!autoPlay}
       {...otherProps}
     />
   )
