@@ -1,7 +1,7 @@
-import React from 'react'
-import { SafeAreaView, Text, View } from 'react-native'
-import { Vimeo } from '../../src/index'
-import { styles } from './styles'
+import React from 'react';
+import {SafeAreaView, Text, View} from 'react-native';
+import {Vimeo} from 'react-native-vimeo-iframe';
+import {styles} from './styles';
 
 const App = () => {
   const videoCallbacks = {
@@ -10,7 +10,7 @@ const App = () => {
     fullscreenchange: (data: any) => console.warn('fullscreenchange: ', data),
     ended: (data: any) => console.warn('ended: ', data),
     controlschange: (data: any) => console.warn('controlschange: ', data),
-  }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -31,7 +31,7 @@ const App = () => {
         </View>
       </View>
     </SafeAreaView>
-  )
-}
+  );
+};
 
-export default App
+export default App;
