@@ -69,6 +69,10 @@ the Vimeo player JS API (more information https://developer.vimeo.com/player/js-
 | `reference`  | `string`                 | undefined | In order to support private videos you can specify the reference prop            |
 | `otherProps` | `WebViewProps`           | {}        | To customize the webview that wraps the player, you can specify additional props |
 
+## Common Issues
+
+- If you have a crash on Android, while wrapping the Vimeo player in a scroll view. You should set `overScrollMode="never"`
+
 ## Example
 
 If you want to see `MetaLabs-inc/react-native-vimeo-iframe` in action, just move into the [example](/example) folder and run `yarn && cd ios && pod install && cd .. && yarn ios` or `yarn && yarn android`. By seeing its source code, you will have a better understanding of the library usage.
