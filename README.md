@@ -1,6 +1,6 @@
 # React Native Vimeo Iframe
 
-React Native Vimeo Iframe is a library to render Vimeo videos in a React Native app.
+React Native Vimeo Iframe is a the go to go library to render Vimeo videos in a React Native app.
 This component allows you to embed a Vimeo video in your app and have full access to
 the Vimeo player JS API (more information https://developer.vimeo.com/player/js-api).
 
@@ -71,7 +71,7 @@ the Vimeo player JS API (more information https://developer.vimeo.com/player/js-
 
 ## Common Issues
 
-- If you have a crash on Android, while wrapping the Vimeo player in a scroll view. You should set `overScrollMode="never"`
+- If you have a crash on Android, while wrapping the Vimeo player in a scroll view. You should set `overScrollMode="never"`. This is an issue from https://github.com/react-native-webview/react-native-webview/issues/2364
 
 ## Example
 
