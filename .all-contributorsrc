@@ -11,9 +11,9 @@
       "avatar_url": "https://avatars.githubusercontent.com/Marcoo09",
       "profile": "https://github.com/Marcoo09",
       "contributions": [
-        "code",
+        "code"
       ]
-    },
+    }
   ],
   "contributorsPerLine": 7,
   "projectName": "react-native-vimeo-iframe",
