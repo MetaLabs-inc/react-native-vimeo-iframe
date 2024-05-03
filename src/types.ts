@@ -6,6 +6,7 @@ export interface LayoutProps extends WebViewProps {
   videoId: string
   params?: string
   reference?: string
+  language?: string
 }
 
 export const PlayerEvents = [
@@ -32,4 +33,4 @@ export const PlayerEvents = [
   'volumechange',
 ] as const
 
-export type PlayerEvent = typeof PlayerEvents[number]
+export type PlayerEvent = (typeof PlayerEvents)[number]
